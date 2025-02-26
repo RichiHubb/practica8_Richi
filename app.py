@@ -45,19 +45,19 @@ def app2():
 
     return "<h5>Hola, soy la view app</h5>";
 
-@app.route("/productos")
-def productos():
+@app.route("/empleados")
+def empleados():
     if not con.is_connected():
         con.reconnect()
 
     cursor = con.cursor(dictionary=True)
     sql    = """
-    SELECT Id_Producto,
-           Nombre_Producto,
-           Precio,
-           Existencias
+    SELECT idEmpleado,
+           nombreEmpleado,
+           numero,
+           fechaIngreso
 
-    FROM productos
+    FROM empleados
 
     LIMIT 10 OFFSET 0
     """
@@ -68,17 +68,17 @@ def productos():
     # Si manejas fechas y horas
     """
     for registro in registros:
-        fecha_hora = registro["Fecha_Hora"]
+        fechaIngreso = registro["fechaIngreso"]
 
         registro["Fecha_Hora"] = fecha_hora.strftime("%Y-%m-%d %H:%M:%S")
         registro["Fecha"]      = fecha_hora.strftime("%d/%m/%Y")
         registro["Hora"]       = fecha_hora.strftime("%H:%M:%S")
     """
 
-    return render_template("productos.html", productos=registros)
+    return render_template("empleados.html", empleados=registros)
 
-@app.route("/productos/buscar", methods=["GET"])
-def buscarProductos():
+@app.route("/empleados/buscar", methods=["GET"])
+def buscarEmpleados():
     if not con.is_connected():
         con.reconnect()
 
@@ -88,18 +88,18 @@ def buscarProductos():
     
     cursor = con.cursor(dictionary=True)
     sql    = """
-    SELECT Id_Producto,
-           Nombre_Producto,
-           Precio,
-           Existencias
+    SELECT idEmpleado,
+           nombreEmpleado,
+           numero,
+           
 
-    FROM productos
+    FROM empleados
 
-    WHERE Nombre_Producto LIKE %s
-    OR    Precio          LIKE %s
-    OR    Existencias     LIKE %s
+    WHERE nombreEmpleado LIKE %s
+    OR    numero          LIKE %s
+    OR    fechaIngreso     LIKE %s
 
-    ORDER BY Id_Producto DESC
+    ORDER BY idEmpleado DESC
 
     LIMIT 10 OFFSET 0
     """
@@ -107,11 +107,11 @@ def buscarProductos():
 
     try:
         cursor.execute(sql, val)
-        registros = cursor.fetchall()
+        empleados = cursor.fetchall()
 
         # Si manejas fechas y horas
         """
-        for registro in registros:
+        for empleado in empleados:
             fecha_hora = registro["Fecha_Hora"]
 
             registro["Fecha_Hora"] = fecha_hora.strftime("%Y-%m-%d %H:%M:%S")
