@@ -79,6 +79,25 @@ def productos():
 
     return render_template("productos.html", productos=registros)
 
+@app.route("/productos/ingredientes/<int:id>")
+def productos2(id):
+    if not con.is_connected():
+        con.reconnect()
+
+    cursor = con.cursor(dictionary=True)
+    sql    = """
+    SELECT productos.Nombre_Producto, ingredientes.*, productos_ingredientes.Cantidad FROM productos_ingredientes
+    INNER JOIN productos ON productos.Id_Producto = productos_ingredientes.Id_Producto
+    INNER JOIN ingredientes ON ingredientes.Id_Ingrediente = productos_ingredientes.Id_Ingrediente
+    ORDER BY productos.Nombre_Producto
+    WHERE productos_ingredientes.Id_Producto = %s
+    """
+
+    cursor.execute(sql, (id, ))
+    registros = cursor.fetchall()
+
+    return render_template("modal.html", productosIngredientes=registros)
+
 @app.route("/productos/buscar", methods=["GET"])
 def buscarProductos():
     if not con.is_connected():
