@@ -89,8 +89,8 @@ def productos2(id):
     SELECT productos.Nombre_Producto, ingredientes.*, productos_ingredientes.Cantidad FROM productos_ingredientes
     INNER JOIN productos ON productos.Id_Producto = productos_ingredientes.Id_Producto
     INNER JOIN ingredientes ON ingredientes.Id_Ingrediente = productos_ingredientes.Id_Ingrediente
-    ORDER BY productos.Nombre_Producto
     WHERE productos_ingredientes.Id_Producto = %s
+    ORDER BY productos.Nombre_Producto
     """
 
     cursor.execute(sql, (id, ))
