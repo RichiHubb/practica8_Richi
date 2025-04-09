@@ -59,6 +59,8 @@ def productos():
 
     FROM productos
 
+    ORDER BY Id_Producto DESC
+
     LIMIT 10 OFFSET 0
     """
 
